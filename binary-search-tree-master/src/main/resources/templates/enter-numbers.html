@@ -1,0 +1,116 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Binary Search Tree</title>
+    <style>
+        .container {
+            margin: 0 auto;
+            max-width: 600px;
+            padding: 20px;
+            text-align: center;
+            font-family: Arial, sans-serif;
+        }
+
+        h2 {
+            color: #333;
+        }
+
+        form, .previous-trees {
+            margin-top: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        li {
+            text-align: left;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>Enter Numbers for Tree Processing</h2>
+    <form id="numbersForm" onsubmit="return submitNumbers();">
+        <label for="numbers">Enter a series of numbers (comma-separated):</label>
+        <input type="text" id="numbers" name="numbers" placeholder="Example: 10,20,30" required>
+        <button type="submit">Submit Numbers</button>
+    </form>
+
+    <div class="previous-trees">
+        <button onclick="showPreviousTrees()">Show Previous Trees</button>
+        <ul id="previousTreesList"></ul>
+    </div>
+</div>
+
+<script>
+
+    function submitNumbers() {
+        const numbers = document.getElementById('numbers').value;
+
+        if (!numbers.trim()) {
+            alert('Please enter valid numbers.');
+            return false;
+        }
+
+        fetch('/api/enter-numbers', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ numbers: numbers })
+        })
+            .then(response => response.text())
+            .then(message => alert(message))
+            .catch(error => alert('Error: ' + error));
+
+        return false;
+    }
+
+
+    function showPreviousTrees() {
+        fetch('/api/previous-trees')
+            .then(response => response.json())
+            .then(trees => {
+                const list = document.getElementById('previousTreesList');
+                list.innerHTML = trees.length ?
+                    trees.map(tree => `<li>${JSON.stringify(tree)}</li>`).join('') :
+                    '<li>No trees found.</li>';
+            })
+            .catch(error => alert('Error fetching trees: ' + error));
+    }
+</script>
+</body>
+</html>
+
+

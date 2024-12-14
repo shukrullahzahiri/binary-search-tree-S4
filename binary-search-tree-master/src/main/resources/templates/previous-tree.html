@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Previous Trees</title>
+    <style>
+        #previous-trees-container pre {
+            margin-bottom: 20px;
+            background-color: #f0f0f0;
+            padding: 10px;
+            border: 1px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+<button id="previous-trees-button">Previous Trees</button>
+<div id="previous-trees-container"></div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#previous-trees-button').click(function() {
+            $.ajax({
+                type: 'GET',
+                url: '/previous-trees',
+                contentType: 'application/json',
+                success: function(data) {
+                    $('#previous-trees-container').html('');
+                    data.forEach(function(tree) {
+                        $('#previous-trees-container').append('<pre>' + JSON.stringify(tree, null, 2) + '</pre>');
+                    });
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error fetching previous trees:', error);
+                    $('#previous-trees-container').html('Error fetching previous trees.');
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>
